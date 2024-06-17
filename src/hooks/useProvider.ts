@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import {
   createAlchemyProvider,
   createAnkrProvider,
-  createInfuraProvider,
+  createQuiknodeProvider,
+  createOneRpcProvider,
 } from '../utils';
 
-type RpcProvider = 'ankr' | 'alchemy' | 'infura';
+type RpcProvider = 'ankr' | 'alchemy' | 'quiknode' | '1rpc';
 
 export const useProvider = (rpcProvider: RpcProvider) => {
   const [provider, setProvider] = useState<ethers.providers.Provider>();
@@ -19,8 +20,11 @@ export const useProvider = (rpcProvider: RpcProvider) => {
       case 'alchemy':
         setProvider(createAlchemyProvider());
         break;
-      case 'infura':
-        setProvider(createInfuraProvider());
+      case 'quiknode':
+        setProvider(createQuiknodeProvider());
+        break;
+      case '1rpc':
+        setProvider(createOneRpcProvider());
         break;
       default:
         break;

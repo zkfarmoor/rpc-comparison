@@ -1,14 +1,12 @@
+// @ts-nocheck
 import {
   Button,
-  Container,
   Heading,
-  Link,
   Table,
   TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -21,7 +19,8 @@ import { useProvider } from './hooks/useProvider';
 function App() {
   const alchemyProvider = useProvider('alchemy');
   const ankrProvider = useProvider('ankr');
-  const infuraProvider = useProvider('infura');
+  const quiknodeProvider = useProvider('quiknode');
+  const oneRpcProvider = useProvider('1rpc');
   const { responseTime: alchemyResponseTime, refetch: refetchAlchemy } =
     useEndpointWithResponseTime(
       alchemyProvider as ethers.providers.Provider,
@@ -32,68 +31,56 @@ function App() {
       ankrProvider as ethers.providers.Provider,
       'getBlockNumber'
     );
-  const { responseTime: infuraResponseTime, refetch: refetchInfura } =
+  const { responseTime: quiknodeResponseTime, refetch: refetchQuiknode } =
     useEndpointWithResponseTime(
-      infuraProvider as ethers.providers.Provider,
+      quiknodeProvider as ethers.providers.Provider,
+      'getBlockNumber'
+    );
+  const { responseTime: oneRpcResponseTime, refetch: refetchOneRpc } =
+    useEndpointWithResponseTime(
+      oneRpcProvider as ethers.providers.Provider,
       'getBlockNumber'
     );
 
   const refetch = async () => {
     refetchAlchemy();
     refetchAnkr();
-    refetchInfura();
+    refetchQuiknode();
+    refetchOneRpc();
   };
-
   return (
     <VStack paddingY='20'>
-      <Heading>RPC latency comparison</Heading>
-
+      <Heading>RPC Latency</Heading>
       <TableContainer>
         <Table variant='striped'>
-          <TableCaption>eth_getBlockNumber endpoint</TableCaption>
+          <TableCaption>Fetched with "eth_getBlockNumber" endpoint</TableCaption>
           <Thead>
             <Tr>
               <Th>RPC provider</Th>
               <Th isNumeric>Response time (in ms)</Th>
             </Tr>
           </Thead>
-
           <Tbody>
             <Tr>
               <Td>Ankr</Td>
-              <Td isNumeric>{ankrResponseTime}</Td>
+              <Td isNumeric>{ankrResponseTime || 'rekt'}</Td>
             </Tr>
             <Tr>
               <Td>Alchemy</Td>
-              <Td isNumeric>{alchemyResponseTime}</Td>
+              <Td isNumeric>{alchemyResponseTime || 'rekt'}</Td>
             </Tr>
             <Tr>
-              <Td>Infura</Td>
-              <Td isNumeric>{infuraResponseTime}</Td>
+              <Td>Quiknode</Td>
+              <Td isNumeric>{quiknodeResponseTime || 'rekt'}</Td>
+            </Tr>
+            <Tr>
+              <Td>1RPC</Td>
+              <Td isNumeric>{oneRpcResponseTime || 'rekt'}</Td>
             </Tr>
           </Tbody>
         </Table>
       </TableContainer>
-
       <Button onClick={refetch}>🔁 Refresh</Button>
-
-      <Container>
-        <Text fontSize='xs' color='gray'>
-          You can verify these results in your browser's network tab. The
-          response times showing up on this page currently are a bit slower than
-          they actually are, but they are slower for all three providers so this
-          still gives you an accurate picture about the order of the providers
-          in terms of speed. Working on a fix!
-        </Text>
-      </Container>
-
-      <Link
-        isExternal
-        href='https://github.com/dhaiwat10/rpc-comparison'
-        textDecoration='underline'
-      >
-        Source code
-      </Link>
     </VStack>
   );
 }

@@ -10,9 +10,13 @@ export const createAlchemyProvider = () => {
   );
 };
 
-export const createInfuraProvider = () => {
+export const createQuiknodeProvider = () => {
+  return new ethers.providers.JsonRpcProvider(`https://dawn-serene-feather.zksync-mainnet.quiknode.pro/86b0b7bac4db86cddb51e683f76bd27a5534096b/`);
+};
+
+export const createOneRpcProvider = () => {
   return new ethers.providers.JsonRpcProvider(
-    `https://mainnet.infura.io/v3/${import.meta.env.VITE_INFURA_ID}`
+    `https://1rpc.io/${import.meta.env.VITE_1RPC_ID}/eth`
   );
 };
 
